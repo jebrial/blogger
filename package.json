@@ -1,0 +1,34 @@
+{
+  "name": "simple-blog-test",
+  "version": "1.0.0",
+  "description": "Example API for blog",
+  "main": "main.js",
+  "scripts": {
+    "start:dev": "nodemon main.js",
+    "test": "mocha ./src/**/*.Test.js --recursive"
+  },
+  "keywords": [
+    "node",
+    "javascript",
+    "blog"
+  ],
+  "author": "Gabriel Dalay",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^0.8.7",
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0",
+    "helmet": "^2.1.1",
+    "jwt-simple": "^0.5.0",
+    "mongoose": "^4.5.5",
+    "morgan": "^1.7.0",
+    "passport": "^0.3.2",
+    "passport-jwt": "^2.1.0"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "chai-http": "^3.0.0",
+    "mocha": "^2.5.3",
+    "nodemon": "^1.9.2"
+  }
+}
