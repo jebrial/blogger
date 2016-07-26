@@ -23,6 +23,14 @@ $ npm run test:routes
 ```sh
 $ npm start
 ```
+
+## Run app in docker:
+(You need docker installed for this)
+
+```sh
+$ docker-compose build
+$ docker-compose up
+```
 ## documentation:
 ```sh
 doc/
