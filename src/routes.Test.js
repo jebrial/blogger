@@ -41,6 +41,7 @@ test('failing to login a user with the wrong email credentials', t => {
       t.end();
     })
 })
+
 test('log a user in', t => {
   request(app)
     .post('/login')
@@ -51,12 +52,22 @@ test('log a user in', t => {
     .expect(200)
     .end(async (err, res) => {
       t.ifError(err);
-      //grab the token so we can make authenticated requests
-      token = res.body.user.token
       t.same(res.body.user.name, 'Rick Sanchez', 'should only be one Rick in here');
       t.same(res.body.user.email, 'plumbus@interplanet.com', 'Should be the Rickest email!');
       t.end();
     })
 })
 
-test('a successfull')
+test('Update a user', t => {
+  request(app)
+    .put('/api/users/plumbus@interplanet.com')
+    .send({
+      name: 'Tiny Rick'
+    })
+    .expect(200)
+    .end(async (err, res) => {
+      t.ifError(err)
+      t.same(res.body.user.name, 'Tiny Rick', 'should only be one Tiny Rick in here');
+      t.end()
+    })
+})

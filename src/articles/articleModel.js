@@ -6,8 +6,7 @@ const mongoose = require('mongoose')
 const ArticleSchema = new mongoose.Schema({
   title: {
     type: String,
-    required: true,
-    unique: true
+    required: true
   },
   authorName: {
     type: String,
@@ -18,13 +17,13 @@ const ArticleSchema = new mongoose.Schema({
     required: true,
     lowercase: true
   },
-  body: {
+  text: {
     type: String,
     required: true
   },
   comments: [{
     name: String,
-    body: String
+    text: String
   }]
 }, {
   timestamps: {}

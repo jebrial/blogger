@@ -1,5 +1,6 @@
 'use strict'
 const User = require('./userModel')
+const Article = require('../articles/articleModel')
 const authconfig = require('../../config')[process.env.NODE_ENV || 'dev'].jwt
 const jwt = require('jsonwebtoken')
 const co = require('co-express')
@@ -51,6 +52,8 @@ const userHandler = {
 
   }),
 
+
+
   // Add new user
   add: co(function*(req, res) {
 
@@ -76,8 +79,10 @@ const userHandler = {
     return userHandler.auth(req, res)
   }),
 
+
+
   // Get one user by email
-  get: (req, res) => {
+  get: co(function*(req, res) {
     if (!req.params.email) {
       return res.json({
         success: false,
@@ -85,64 +90,75 @@ const userHandler = {
         user: null
       })
     }
-    User.findOne({
-      email: email
-    }, (err, user) => {
-      if (err) {
-        return res.json({
-          success: false,
-          err: err,
-          user: null
-        })
-      }
+
+    const user = yield User.findOne({
+      email: req.params.email
+    }).exec()
+
+    if (user) {
       //do not return the password
       user.password = null
-
-      res.json({
+      return res.json({
         success: true,
         user: user
       })
+    }
+
+    return res.json({
+      success: false,
+      err: 'Error',
+      user: null
     })
-  },
+  }),
+
+
 
   // Update a user
-  update: (req, res) => {
-    if (!req.params.email) {
+  update: co(function*(req, res) {
+    const email = req.params.email
+    if (!email) {
       return res.json({
         success: false,
         message: 'email not provided',
         user: null
       })
     }
-    User.findOne({
+
+    const user = yield User.findOne({
       email: email
-    }, (err, user) => {
-      if (err) {
-        return res.json({
-          success: false,
-          err: err,
-          user: null
-        })
-      }
+    }).exec()
+
+    if (user) {
+      const insert = {}
       if (req.body.email) {
-        user.email = req.body.email
+        insert.email = req.body.email
       }
       if (req.body.password) {
-        user.password = req.body.password
+        insert.password = req.body.password
       }
       if (req.body.name) {
-        user.name = req.body.name
+        insert.name = req.body.name
       }
-      user.save((err, user) => {
-        //do not return the password
-        user.password = null
-        res.json({
-          success: true,
-          user: user
+      try {
+        const result = yield user.update(insert)
+      } catch (err) {
+        return res.json({
+          success: false,
+          error: 'Unable to update user'
         })
+      }
+      //result.password = null
+      return res.json({
+        success: true,
+        message: 'User updated'
       })
+    }
+    return res.json({
+      success: false,
+      err: 'Unable to get user',
+      user: null
     })
-  },
+  }),
 
   // Delete a user
   delete: (req, res) => {
@@ -171,19 +187,80 @@ const userHandler = {
   },
 
   // Add new article
-  addArticle: (req, res) => {
-
-  },
+  addArticle: co(function*(req, res) {
+    const user = yield User.findOne({
+      email: req.params.email
+    }).exec()
+    if (user) {
+      let article = new Article({
+        title: req.body.title,
+        text: req.body.text,
+        authorName: user.name,
+        authorEmail: user.email
+      })
+      try {
+        yield article.save()
+      } catch (err) {
+        return res.json({
+          success: false,
+          err: 'Could not save article'
+        })
+      }
+      return res.json({
+        success: true,
+        message: "New Article added"
+      })
+    }
+    return res.json({
+      success: false,
+      article: null
+    })
+  }),
 
   // Update a user's article
-  updateArticle: (req, res) => {
+  updateArticle: co(function*(req, res) {
+    let result;
+    try {
+      result = yield Article.findOne({
+        _id: req.params.id
+      }).exec()
+    } catch (err) {
+      return res.json({
+        success: false
+      })
+    }
+    const insert = {}
+    if (req.body.text) {
+      insert.text = req.body.text
+    }
+    try {
+      yield result.update(insert)
+    } catch (err) {
+      return res.json({
+        success: false
+      })
+    }
+    return res.json({
+      success: true
+    })
 
-  },
+  }),
 
   // Delete a user's article
-  deleteArticle: (req, res) => {
-
-  }
+  deleteArticle: co(function*(req, res) {
+    try {
+      yield Article.remove({
+        _id: req.params.id
+      })
+    } catch (err) {
+      return res.json({
+        success: false
+      })
+    }
+    return res.json({
+      success: true
+    })
+  })
 }
 
 module.exports = userHandler

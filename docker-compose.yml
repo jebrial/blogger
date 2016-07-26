@@ -5,7 +5,7 @@ inventory:
   ports:
   - "8080:8080"
   environment:
-    - NODE_ENV=dev
+    - NODE_ENV=staging
   links:
   - mongodb
   - mongodb:mongodb.mortyfeed.local

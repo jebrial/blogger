@@ -5,6 +5,14 @@ const config = {
       expireTime: 60 * 60 * 24 * 7,
       secret: '!Wub4LUB@dUbDub!@#()',
     },
+    mongoDBURL: 'mongodb://localhost/blogged_dev',
+    port: 3001
+  },
+  staging: {
+    jwt: {
+      expireTime: 60 * 60 * 24 * 7,
+      secret: '!Wub4LUB@dUbDub!@#()',
+    },
     mongoDBURL: 'mongodb:mongodb.mortyfeed.local/blogged_dev',
     port: 8080
   },

@@ -2,6 +2,7 @@
 const protectedApi = require('express').Router()
 const publicApi = require('express').Router()
 const UserHandler = require('./users/userHandler')
+const ArticleHandler = require('./articles/articleHandler')
 // ---- Public Routes ----------------------------------
 
 /**
@@ -35,7 +36,7 @@ publicApi.post('/login', UserHandler.auth)
  * @apiSuccess {Object[]} Returns an array of articles.
  */
 
-//publicApi.get('/articles', ArticleHandler.get)
+publicApi.get('/articles', ArticleHandler.getAll)
 
 /**
  * @api {get} /articles/:id Get article
@@ -46,10 +47,10 @@ publicApi.post('/login', UserHandler.auth)
  * @apiSuccess {Object} Returns an article.
  */
 
-//publicApi.get('/articles/:id', ArticleHandler.get)
+publicApi.get('/articles/:id', ArticleHandler.get)
 
 /**
- * @api {post} /articles/:id/comment Post comment
+ * @api {post} /articles/:id/comments Post comment
  * @apiName postComment
  * @apiGroup Articles
  *
@@ -57,10 +58,10 @@ publicApi.post('/login', UserHandler.auth)
  * @apiSuccess {Object} Returns a Success message.
  */
 
-//publicApi.post('/articles/:id/comment', ArticleHandler.addComment)
+publicApi.post('/articles/:id/comments', ArticleHandler.addComment)
 
 /**
- * @api {delete} /articles/:id/comment Delete comment
+ * @api {delete} /articles/:id/comments Delete comment
  * @apiName deleteComment
  * @apiGroup Articles
  *
@@ -68,7 +69,7 @@ publicApi.post('/login', UserHandler.auth)
  * @apiSuccess {Object} Returns a Success message.
  */
 
-//publicApi.delete('/articles/:id/comment', ArticleHandler.deleteComment)
+publicApi.delete('/articles/:id/comments/:commentId', ArticleHandler.deleteComment)
 
 // ---- Private Routes ----------------------------------
 
@@ -82,7 +83,7 @@ publicApi.post('/login', UserHandler.auth)
  * @apiSuccess {Object[]} Returns a User object.
  */
 
-//protectedApi.get('/users/:email', UserHandler.get)
+protectedApi.get('/users/:email', UserHandler.get)
 
 /**
  * @api {put} /api/users/:email Update a User
@@ -93,7 +94,7 @@ publicApi.post('/login', UserHandler.auth)
  *
  * @apiSuccess {Object[]} Returns a User object.
  */
-protectedApi.put('/users/:email', auth(UserHandler.update))
+protectedApi.put('/users/:email', auth, UserHandler.update)
 
 /**
  * @api {delete} /api/users/:email Delete a User
@@ -104,7 +105,7 @@ protectedApi.put('/users/:email', auth(UserHandler.update))
  *
  * @apiSuccess {String} Returns a success message.
  */
-protectedApi.delete('/users/:email', auth(UserHandler.delete))
+protectedApi.delete('/users/:email', auth, UserHandler.delete)
 
 /**
  * @api {post} /users/:email/articles Adds a new article
@@ -115,7 +116,7 @@ protectedApi.delete('/users/:email', auth(UserHandler.delete))
  * @apiParam {Object} article User created article.
  * @apiSuccess {String} Returns a success message.
  */
-protectedApi.post('/users/:email/articles', auth(UserHandler.addArticle))
+protectedApi.post('/users/:email/articles', auth, UserHandler.addArticle)
 
 /**
  * @api {put} /users/:email/articles/:id Updates an article
@@ -126,7 +127,7 @@ protectedApi.post('/users/:email/articles', auth(UserHandler.addArticle))
  * @apiParam {Object} article User updated article.
  * @apiSuccess {String} Returns a success message.
  */
-protectedApi.put('/users/:email/articles/:id', auth(UserHandler.updateArticle))
+protectedApi.put('/users/:email/articles/:id', auth, UserHandler.updateArticle)
 
 /**
  * @api {delete} /users/:email/articles/:id Deletes an article
@@ -137,7 +138,7 @@ protectedApi.put('/users/:email/articles/:id', auth(UserHandler.updateArticle))
  * @apiParam {Object} article User deleted article.
  * @apiSuccess {String} Returns a success message.
  */
-protectedApi.delete('/users/:email/articles/:id', auth(UserHandler.deleteArticle))
+protectedApi.delete('/users/:email/articles/:id', auth, UserHandler.deleteArticle)
 
 module.exports = {
   protectedApi: protectedApi,
@@ -145,15 +146,12 @@ module.exports = {
 }
 
 // Only let users update their own account
-function auth(handler) {
-  return (req, res) => {
-    if (req.userCheck !== req.params.email) {
-      return res.status(403).json({
-        success: false,
-        message: 'Not in my house!'
-      })
-    }
-    return handler(req, res)
+function auth(req, res, next) {
+  if (req.userCheck !== req.params.email) {
+    return res.status(403).json({
+      success: false,
+      message: 'Not in my house!'
+    })
   }
-
+  return next()
 }

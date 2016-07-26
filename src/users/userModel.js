@@ -28,8 +28,6 @@ const UserSchema = new mongoose.Schema({
 // Presave function for users - hashes the password
 UserSchema.pre('save', function(next) {
   let user = this
-  // make sure the email is lowercase before saving
-  user.email = user.email.toLowerCase()
   if (!user.isModified('password')) {
     return next
   }

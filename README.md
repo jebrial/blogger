@@ -21,7 +21,7 @@ $ npm run test:routes
 ## Run app:
 
 ```sh
-$ npm start
+$ npm run start:dev
 ```
 
 ## Run app in docker:
