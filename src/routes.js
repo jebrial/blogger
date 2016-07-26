@@ -3,6 +3,7 @@ const protectedApi = require('express').Router()
 const publicApi = require('express').Router()
 const UserHandler = require('./users/userHandler')
 // ---- Public Routes ----------------------------------
+
 /**
  * @api {post} /signup Add a User
  * @apiName addUser
@@ -33,52 +34,58 @@ publicApi.post('/login', UserHandler.auth)
  *
  * @apiSuccess {Object[]} Returns an array of articles.
  */
+
 //publicApi.get('/articles', ArticleHandler.get)
 
 /**
- * @api {get} /articles/id Get article
+ * @api {get} /articles/:id Get article
  * @apiName getArticle
  * @apiGroup Articles
  *
  *
  * @apiSuccess {Object} Returns an article.
  */
+
 //publicApi.get('/articles/:id', ArticleHandler.get)
 
 /**
- * @api {post} /articles/id/comment Post comment
+ * @api {post} /articles/:id/comment Post comment
  * @apiName postComment
  * @apiGroup Articles
  *
  *
- * @apiSuccess {Object} Returns an article.
+ * @apiSuccess {Object} Returns a Success message.
  */
+
 //publicApi.post('/articles/:id/comment', ArticleHandler.addComment)
 
 /**
- * @api {post} /articles/id/comment Post comment
- * @apiName postComment
+ * @api {delete} /articles/:id/comment Delete comment
+ * @apiName deleteComment
  * @apiGroup Articles
  *
  *
- * @apiSuccess {Object} Returns an article.
+ * @apiSuccess {Object} Returns a Success message.
  */
+
 //publicApi.delete('/articles/:id/comment', ArticleHandler.deleteComment)
 
 // ---- Private Routes ----------------------------------
+
 /**
- * @api {get} /api/user/email Request a User
- * @apiName GetUser
+ * @api {get} /api/user/:email Request a User
+ * @apiName GetUserAuthed
  * @apiGroup User
  *
  * @apiParam {String} email Users unique email.
  *
  * @apiSuccess {Object[]} Returns a User object.
  */
+
 //protectedApi.get('/users/:email', UserHandler.get)
 
 /**
- * @api {put} /api/user/email Update a User
+ * @api {put} /api/users/:email Update a User
  * @apiName updateUser
  * @apiGroup User
  *
@@ -89,7 +96,7 @@ publicApi.post('/login', UserHandler.auth)
 protectedApi.put('/users/:email', auth(UserHandler.update))
 
 /**
- * @api {delete} /api/user/email Delete a User
+ * @api {delete} /api/users/:email Delete a User
  * @apiName deleteUser
  * @apiGroup User
  *
@@ -100,7 +107,7 @@ protectedApi.put('/users/:email', auth(UserHandler.update))
 protectedApi.delete('/users/:email', auth(UserHandler.delete))
 
 /**
- * @api {post} /users/email/articles Adds a new article
+ * @api {post} /users/:email/articles Adds a new article
  * @apiName addArticle
  * @apiGroup User
  *

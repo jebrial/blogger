@@ -4,9 +4,17 @@
   "description": "Example API for blog",
   "main": "main.js",
   "scripts": {
+    "start": "node main.js",
     "start:dev": "nodemon main.js",
     "test": "NODE_ENV=test mocha ./src/**/*.Test.js --recursive",
     "test:routes": "NODE_ENV=test ./node_modules/.bin/babel-tape-runner ./src/routes.Test.js | tap-spec"
+  },
+  "apidoc": {
+    "name": "simple-blog-test",
+    "version": "0.0.1",
+    "description": "A simple blog api",
+    "title": "Blogged",
+    "url": "https://github.com/jebrial/blogger"
   },
   "keywords": [
     "node",
@@ -16,7 +24,7 @@
   "author": "Gabriel Dalay",
   "license": "ISC",
   "dependencies": {
-    "bcrypt": "^0.8.7",
+    "bcryptjs": "^2.3.0",
     "body-parser": "^1.15.2",
     "co-express": "^1.2.1",
     "express": "^4.14.0",

@@ -1,6 +1,6 @@
 'use strict'
 const mongoose = require('mongoose')
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcryptjs')
 const salt_factor = 10
 
 const UserSchema = new mongoose.Schema({

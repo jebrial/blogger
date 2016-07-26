@@ -30,6 +30,7 @@ app.use('/', routes.publicApi)
 app.use('/api', authorize(config.jwt), routes.protectedApi)
 
 // Connect to MONGODB
+mongoose.Promise = global.Promise
 mongoose.connect(config.mongoDBURL, (err) => {
   if (err) {
     throw err
