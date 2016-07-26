@@ -1,4 +1,5 @@
 const config = {
+  // This is just a dummy config! You wouldn't commit this to a public repo!
   dev: {
     jwt: {
       expireTime: 60 * 60 * 24 * 7,
