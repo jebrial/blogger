@@ -1,46 +1,63 @@
 'use strict'
-const mongoose 		= require('mongoose')
-const bcrypt 		= require('bcrypt')
-const salt_factor 	= 10
+const mongoose = require('mongoose')
+const bcrypt = require('bcrypt')
+const salt_factor = 10
 
 const UserSchema = new mongoose.Schema({
-	email: { type: String, required: true, index: { unique: true }},
-	name: { type: String, required: true },
-	password: { type: String, required: true }
+  email: {
+    type: String,
+    required: true,
+    lowercase: true,
+    unique: true
+  },
+  name: {
+    type: String,
+    required: true,
+    index: {
+      unique: true
+    }
+  },
+  password: {
+    type: String,
+    required: true
+  }
 }, {
-	timestamps: {}
+  timestamps: {}
 })
 
 // Presave function for users - hashes the password
 UserSchema.pre('save', function(next) {
-	let user = this
+  let user = this
+  // make sure the email is lowercase before saving
+  user.email = user.email.toLowerCase()
+  if (!user.isModified('password')) {
+    return next
+  }
 
-	if (!user.isModified('password')) {
-		return next
-	}
-
-	bcrypt.genSalt(salt_factor, (err, salt) => {
-		if (err) {
-			return next(err)
-		}
-		bcrypt.hash(user.password, salt, (err, hash) => {
-			if (err) {
-				return next(err)
-			}
-			user.password = hash
-			next()
-		})
-	})
+  bcrypt.genSalt(salt_factor, (err, salt) => {
+    if (err) {
+      return next(err)
+    }
+    bcrypt.hash(user.password, salt, (err, hash) => {
+      if (err) {
+        return next(err)
+      }
+      user.password = hash
+      next()
+    })
+  })
 })
 
 // Check password function for user verification
-UserSchema.methods.checkPassword = function(pw, next) {
-	bcrypt.compare(pw, this.password, (err, isMatch) => {
-		if (err) {
-			return next(err)
-		}
-		next(null, isMatch)
-	})
+UserSchema.methods.checkPassword = function(pw) {
+  return new Promise((resolve, reject) => {
+    bcrypt.compare(pw, this.password, (err, isMatch) => {
+      if (err) {
+        return reject(err)
+      }
+      resolve(isMatch)
+    })
+  })
 }
 
 
