@@ -4,7 +4,7 @@ const config = {
       expireTime: 60 * 60 * 24 * 7,
       secret: '!Wub4LUB@dUbDub!@#()',
     },
-    mongoDBURL: 'mongodb://rick:sanchez@ds027165.mlab.com:27165/blog_test',
+    mongoDBURL: 'mongodb://localhost/blogged_dev',
     port: 8080
   },
   test: {
