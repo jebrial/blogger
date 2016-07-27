@@ -52,7 +52,6 @@ test('log a user in', t => {
     .expect(200)
     .end(async (err, res) => {
       t.ifError(err);
-      t.same(res.body.user.name, 'Rick Sanchez', 'should only be one Rick in here');
       t.same(res.body.user.email, 'plumbus@interplanet.com', 'Should be the Rickest email!');
       t.end();
     })
@@ -68,6 +67,7 @@ test('Update a user', t => {
     .end(async (err, res) => {
       t.ifError(err)
       t.same(res.body.user.name, 'Tiny Rick', 'should only be one Tiny Rick in here');
+      t.same(res.body.user.email, 'plumbus@interplanet.com', 'Should be the Rickest email!');
       t.end()
     })
 })
