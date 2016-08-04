@@ -49,10 +49,7 @@ describe('User', () => {
       expect(user).to.have.property('password')
       //should be hashed so this should not be equal with out using compare function
       expect(user.password).to.not.equal('plumbusamongus')
-      user.checkPassword('plumbusamongus', (err, isMatch) => {
-        if (err) {
-          return done(err)
-        }
+      user.checkPassword('plumbusamongus').then((isMatch) => {
         expect(isMatch).to.equal(true)
         return done()
       })

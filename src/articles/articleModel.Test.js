@@ -50,7 +50,7 @@ describe('Article', () => {
   it('should create a new article', (done) => {
     let article = new Article({
       title: 'The Plumbus amongus',
-      body: 'This is a discussion about the daily use of plumbusus',
+      text: 'This is a discussion about the daily use of plumbusus',
       authorName: 'Rick Sanchez',
       authorEmail: 'plumbus@interplanet.com'
     })
@@ -59,7 +59,7 @@ describe('Article', () => {
         return done(err)
       }
       expect(result).to.have.property('title')
-      expect(result).to.have.property('body')
+      expect(result).to.have.property('text')
       expect(result).to.have.property('authorName')
       expect(result).to.have.property('authorEmail')
       done()
